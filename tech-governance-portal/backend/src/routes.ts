@@ -74,27 +74,15 @@ router.put('/products/:id', async (req, res) => {
 });
 
 router.delete('/products/:id', async (req, res) => {
-  const productId = Number(req.params.id);
   try {
-    await prisma.$transaction(async (tx) => {
-      await tx.evaluation.deleteMany({ where: { productId } });
-      await tx.comment.deleteMany({ where: { productId } });
-      await tx.internalProject.deleteMany({ where: { products: { some: { id: productId } } } });
-      await tx.product.delete({ where: { id: productId } });
-    });
-
-    res.status(204).send();
+    await prisma.product.delete({ where: { id: Number(req.params.id) } });
+    res.json({ success: true });
   } catch (error) {
-    if (typeof error === 'object' && error !== null && 'code' in error) {
-      if (error.code === 'P2025') {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-      console.error('Prisma Error deleting product (Code:', error.code, '):', error);
-      return res.status(500).json({ error: `Failed to delete product due to a database constraint or server error (${error.code})` });
+    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2025') {
+      return res.status(404).json({ error: 'Product not found' });
     }
-    
-    console.error('Unknown error deleting product:', error);
-    res.status(500).json({ error: 'Failed to delete product due to an unknown server error' });
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'Failed to delete product due to a server error' });
   }
 });
 
