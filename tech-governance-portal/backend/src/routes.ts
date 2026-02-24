@@ -78,7 +78,8 @@ router.delete('/products/:id', async (req, res) => {
   try {
     await prisma.$transaction(async (tx) => {
       await tx.evaluation.deleteMany({ where: { productId } });
-      await tx.metricGroup.deleteMany({ where: { productId } });
+      await tx.comment.deleteMany({ where: { productId } });
+      await tx.internalProject.deleteMany({ where: { products: { some: { id: productId } } } });
       await tx.product.delete({ where: { id: productId } });
     });
 
@@ -103,37 +104,6 @@ router.delete('/products/:id', async (req, res) => {
       if (error.code === 'P2025') {
         return res.status(404).json({ error: 'Product not found' });
       }
-      console.error('Prisma Error deleting product (Code:', error.code, '):', error);
-      return res.status(500).json({ error: `Failed to delete product due to a database constraint or server error (${error.code})` });
-    }
-    
-    console.error('Unknown error deleting product:', error);
-    res.status(500).json({ error: 'Failed to delete product due to an unknown server error' });
-  }
-});
-
-    res.status(204).send();
-  } catch (error) {
-    if (typeof error === 'object' && error !== null && 'code' in error) {
-      if (error.code === 'P2025') {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-      console.error('Prisma Error deleting product (Code:', error.code, '):', error);
-      return res.status(500).json({ error: `Failed to delete product due to a database constraint or server error (${error.code})` });
-    }
-    
-    console.error('Unknown error deleting product:', error);
-    res.status(500).json({ error: 'Failed to delete product due to an unknown server error' });
-  }
-});
-
-    res.status(204).send(); // 204 No Content is standard for successful deletion
-  } catch (error) {
-    if (typeof error === 'object' && error !== null && 'code' in error) {
-      if (error.code === 'P2025') {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-      // Log the actual error code for other issues (like P2014 - foreign key constraint)
       console.error('Prisma Error deleting product (Code:', error.code, '):', error);
       return res.status(500).json({ error: `Failed to delete product due to a database constraint or server error (${error.code})` });
     }
