@@ -97,6 +97,36 @@ router.delete('/products/:id', async (req, res) => {
   }
 });
 
+    res.status(204).send();
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      console.error('Prisma Error deleting product (Code:', error.code, '):', error);
+      return res.status(500).json({ error: `Failed to delete product due to a database constraint or server error (${error.code})` });
+    }
+    
+    console.error('Unknown error deleting product:', error);
+    res.status(500).json({ error: 'Failed to delete product due to an unknown server error' });
+  }
+});
+
+    res.status(204).send();
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      console.error('Prisma Error deleting product (Code:', error.code, '):', error);
+      return res.status(500).json({ error: `Failed to delete product due to a database constraint or server error (${error.code})` });
+    }
+    
+    console.error('Unknown error deleting product:', error);
+    res.status(500).json({ error: 'Failed to delete product due to an unknown server error' });
+  }
+});
+
     res.status(204).send(); // 204 No Content is standard for successful deletion
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error) {
