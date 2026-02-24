@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "dashboard": "לוח בקרה",
+    "products": "מוצרים",
+    "metrics": "מדדים",
+    "metricGroups": "קבוצות מדדים",
+    "evaluations": "הערכות",
+    "internalProjects": "פרויקטים פנימיים"
+  },
+  "layout": {
+    "systemStatus": "מצב מערכת",
+    "allSystemsOperational": "כל המערכות תקינות",
+    "createdBy": "נוצר על ידי: יהודה קורוטקין"
+  },
+  "dashboard": {
+    "overview": "סקירה כללית",
+    "newEvaluation": "הערכה חדשה",
+    "totalProducts": "סה״כ מוצרים",
+    "activeEvaluations": "הערכות פעילות",
+    "internalProjects": "פרויקטים פנימיים",
+    "avgMetricScore": "ציון מדד ממוצע",
+    "recentActivity": "פעילות אחרונה",
+    "evaluated": "הוערך",
+    "on": "על",
+    "score": "ציון",
+    "noRecentActivity": "אין פעילות אחרונה להצגה.",
+    "activitiesWillAppear": "פעילויות יופיעו כאן לאחר שתתחיל להעריך מוצרים."
+  }
+}

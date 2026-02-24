@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "metrics": "Metrics",
+    "metricGroups": "Metric Groups",
+    "evaluations": "Evaluations",
+    "internalProjects": "Internal Projects"
+  },
+  "layout": {
+    "systemStatus": "System Status",
+    "allSystemsOperational": "All systems operational",
+    "createdBy": "Created by: Yehuda Korotkin"
+  },
+  "dashboard": {
+    "overview": "Overview",
+    "newEvaluation": "New Evaluation",
+    "totalProducts": "Total Products",
+    "activeEvaluations": "Active Evaluations",
+    "internalProjects": "Internal Projects",
+    "avgMetricScore": "Avg. Metric Score",
+    "recentActivity": "Recent Activity",
+    "evaluated": "Evaluated",
+    "on": "on",
+    "score": "Score",
+    "noRecentActivity": "No recent activity to display.",
+    "activitiesWillAppear": "Activities will appear here once you start evaluating products."
+  }
+}

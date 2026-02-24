@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer base {
+  body {
+    background-color: var(--color-slate-50);
+    color: var(--color-slate-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background-color: var(--color-blue-200);
+    color: var(--color-blue-900);
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: rgb(255 255 255 / 0.7);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgb(255 255 255 / 0.5);
+    box-shadow: var(--shadow-sm);
+  }
+  .glass-card {
+    background-color: rgb(255 255 255 / 0.8);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgb(255 255 255 / 0.6);
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-2xl);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+  .glass-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
