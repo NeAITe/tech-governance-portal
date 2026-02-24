@@ -43,6 +43,9 @@ router.get('/dashboard/stats', async (req, res) => {
 
 router.get('/products', async (req, res) => {
   const products = await prisma.product.findMany({
+    where: {
+      isDeleted: false, // Only return non-deleted products
+    },
     include: { internalProjects: true, evaluations: true, comments: true, metricGroups: { include: { metrics: true } } }
   });
   res.json(products);
@@ -75,14 +78,75 @@ router.put('/products/:id', async (req, res) => {
 
 router.delete('/products/:id', async (req, res) => {
   try {
-    await prisma.product.delete({ where: { id: Number(req.params.id) } });
-    res.json({ success: true });
-  } catch (error) {
-    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2025') {
+    const productId = Number(req.params.id);
+    
+    // 1. Check if product exists and is not already soft-deleted
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: productId },
+      select: { isDeleted: true }
+    });
+
+    if (!existingProduct) {
       return res.status(404).json({ error: 'Product not found' });
     }
-    console.error('Error deleting product:', error);
-    res.status(500).json({ error: 'Failed to delete product due to a server error' });
+
+    if (existingProduct.isDeleted) {
+      return res.status(200).json({ success: true, message: 'Product already soft-deleted' });
+    }
+
+    // 2. Perform soft delete: set isDeleted to true and set deletedAt
+    const product = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    });
+
+    res.json({ success: true, product });
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      console.error('Prisma Error soft-deleting product (Code:', error.code, '):', error);
+      return res.status(500).json({ error: `Failed to soft-delete product due to a database constraint or server error (${error.code})` });
+    }
+    
+    console.error('Unknown error soft-deleting product:', error);
+    res.status(500).json({ error: 'Failed to soft-delete product due to an unknown server error' });
+  }
+});
+
+    if (!existingProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (existingProduct.isDeleted) {
+      return res.status(200).json({ success: true, message: 'Product already soft-deleted' });
+    }
+
+    // 2. Perform soft delete: set isDeleted to true and set deletedAt
+    const product = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    });
+
+    res.json({ success: true, product });
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      console.error('Prisma Error soft-deleting product (Code:', error.code, '):', error);
+      return res.status(500).json({ error: `Failed to soft-delete product due to a database constraint or server error (${error.code})` });
+    }
+    
+    console.error('Unknown error soft-deleting product:', error);
+    res.status(500).json({ error: 'Failed to soft-delete product due to an unknown server error' });
   }
 });
 
